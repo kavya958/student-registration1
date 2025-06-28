@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git 'https://github.com/saipriya3008/studentRegistration'
+                git url :'https://github.com/saipriya3008/studentRegistration', branch: 'main'
             }
         }
 
