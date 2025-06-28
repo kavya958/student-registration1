@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'yourdockerhubusername/student-registration'
+        IMAGE_NAME = 'saipriya30/student-registration'
         DOCKER_CREDENTIALS_ID = 'docker-hub-creds'
     }
 
@@ -15,14 +15,18 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './mvnw clean package -DskipTests'
+                bat 'mvnw clean package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                sh './mvnw test'
-                junit '**/target/surefire-reports/*.xml'
+                bat 'mvnw.cmd test'
+            }
+            post{
+                always{
+                    junit '**/target/surefire-reports/*.xml'
+                }
             }
         }
 
