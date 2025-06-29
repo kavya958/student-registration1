@@ -15,13 +15,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './mvnw clean package -DskipTests'
+                sh 'chmod +x mvnw && ./mvnw clean package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                sh './mvnw test'
+                sh 'chmod +x mvnw && ./mvnw test'
             }
             post {
                 always {
