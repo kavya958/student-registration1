@@ -1,31 +1,30 @@
 pipeline {
     agent any
 
-   environment {
-    IMAGE_NAME = 'kavya958/student-registration'
-    DOCKER_CREDENTIALS_ID = 'docker-hub-creds' // (keep same if you already added this credential in Jenkins)
-}
+    environment {
+        IMAGE_NAME = 'kavya958/student-registration'
+        DOCKER_CREDENTIALS_ID = 'docker-hub-creds'
+    }
 
     stages {
         stage('Clone') {
             steps {
-                git url :'https://github.com/kavya958/student-registration1', branch: 'main'
-
+                git url: 'https://github.com/kavya958/student-registration1.git', branch: 'main'
             }
         }
 
         stage('Build') {
             steps {
-                bat 'mvnw clean package -DskipTests'
+                sh './mvnw clean package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                bat 'mvnw.cmd test'
+                sh './mvnw test'
             }
-            post{
-                always{
+            post {
+                always {
                     junit '**/target/surefire-reports/*.xml'
                 }
             }
@@ -45,10 +44,11 @@ pipeline {
 
     post {
         success {
-            echo ' Build & Push Successful'
+            echo '✅ Build, Test, and Push Successful!'
         }
         failure {
-            echo ' Pipeline Failed'
+            echo '❌ Pipeline Failed'
         }
     }
 }
+
