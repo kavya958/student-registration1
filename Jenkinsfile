@@ -3,11 +3,11 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'kavya958/student-registration'
-        DOCKER_CREDENTIALS_ID = 'docker-hub-creds'
+        DOCKER_CREDENTIALS_ID = 'docker-hub-creds' // Create this in Jenkins > Credentials
     }
 
     stages {
-        stage('Clone') {
+        stage('Checkout') {
             steps {
                 git url: 'https://github.com/kavya958/student-registration1.git', branch: 'main'
             }
@@ -15,13 +15,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'chmod +x mvnw && ./mvnw clean package -DskipTests'
+                sh './mvnw clean package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'chmod +x mvnw && ./mvnw test'
+                sh './mvnw test'
             }
             post {
                 always {
@@ -34,21 +34,29 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        def image = docker.build("${IMAGE_NAME}:${BUILD_NUMBER}")
-                        image.push()
+                        def appImage = docker.build("${IMAGE_NAME}:${BUILD_NUMBER}")
+                        appImage.push()
                     }
                 }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo '✅ Kubernetes deployment goes here (can be skipped if not configured)'
+                // You can put your kubectl or helm deployment command here
             }
         }
     }
 
     post {
         success {
-            echo '✅ Build, Test, and Push Successful!'
+            echo '✅ Build, Test, Docker Push successful!'
         }
         failure {
-            echo '❌ Pipeline Failed'
+            echo '❌ Pipeline failed.'
         }
     }
 }
+
 
