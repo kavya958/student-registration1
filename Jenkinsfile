@@ -1,15 +1,16 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = 'saipriya30/student-registration'
-        DOCKER_CREDENTIALS_ID = 'docker-hub-creds'
-    }
+   environment {
+    IMAGE_NAME = 'kavya958/student-registration'
+    DOCKER_CREDENTIALS_ID = 'docker-hub-creds' // (keep same if you already added this credential in Jenkins)
+}
 
     stages {
         stage('Clone') {
             steps {
-                git url :'https://github.com/saipriya3008/studentRegistration', branch: 'main'
+                git url :'https://github.com/kavya958/student-registration1', branch: 'main'
+
             }
         }
 
